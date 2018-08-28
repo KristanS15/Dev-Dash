@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { HashRouter, Route } from 'react-router-dom';
+import 'bulma/css/bulma.css'
+import Dash from './components/Dash';
+import Settings from './components/Settings';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<HashRouter>
+				<div>
+					<Route exact path="/" component={ Dash }/>
+					<Route exact path="/settings" component={ Settings }/>
+				</div>
+			</HashRouter>
+		);
+	}
 }
 
 export default App;
