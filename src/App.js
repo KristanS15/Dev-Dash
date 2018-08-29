@@ -12,7 +12,7 @@ class App extends Component {
 				<div>
 					<div className="columns">
 						<Nav />
-						<div className="column">
+						<div className="column top-column">
 							<Route exact path="/" component={ Dash }/>
 							<Route exact path="/settings" component={ Settings }/>
 						</div>

@@ -17,8 +17,8 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "dev": "nf start",
-    "sass" : "sass --watch src/styles/scss:src/styles/css",
-    "sass:build": "sass — update src/styles/scss:src/styles/css"
+    "sass" : "sass --watch src/styles/scss/index.scss:src/styles/css/index.css",
+    "sass:build": "sass — update src/styles/scss/index.scss:src/styles/css/index.css"
   },
   "devDependencies": {
     "electron": "^2.0.8",

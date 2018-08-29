@@ -1,13 +1,28 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
+const path = require('path');
+const Store = require('./electron-store.js');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
+const store = new Store({
+  // We'll call our data file 'user-preferences'
+  configName: 'window-preferences',
+  defaults: {
+    // 800x600 is the default size of our window
+    windowBounds: { width: 1200, height: 700 }
+  }
+});
+
 function createWindow () {
+
+  // First we'll get our height and width. This will be the defaults if there wasn't anything saved
+  let { width, height } = store.get('windowBounds');
+
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1200, height: 700, titleBarStyle: 'hiddenInset'})
+  mainWindow = new BrowserWindow({width: width, height: height, titleBarStyle: 'hiddenInset'})
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
     pathname: path.join(__dirname, '/../build/index.html'),
@@ -17,7 +32,17 @@ function createWindow () {
   mainWindow.loadURL(startUrl);
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
+
+  // The BrowserWindow class extends the node.js core EventEmitter class, so we use that API
+  // to listen to events on the BrowserWindow. The resize event is emitted when the window size changes.
+  mainWindow.on('resize', () => {
+    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+    // the height, width, and x and y coordinates.
+    let { width, height } = mainWindow.getBounds();
+    // Now that we have them, save them using the `set` method.
+    store.set('windowBounds', { width, height });
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
