@@ -4,9 +4,8 @@ import { NavLink } from 'react-router-dom'
 class Dash extends Component {
 	render() {
 		return (
-			<div className="hero">
+			<div>
 				<h1 className="title is-1">Dev-Dash</h1>
-				<NavLink to="/settings">Go to Settings</NavLink>
 			</div>
 		);
 	}

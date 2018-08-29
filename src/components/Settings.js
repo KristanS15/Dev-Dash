@@ -6,7 +6,6 @@ class Settings extends Component {
 		return (
 			<div className="hero">
 				<h1 className="title is-1">Setttings</h1>
-				<NavLink to="/">Go to Dash</NavLink>
 			</div>
 		);
 	}
