@@ -19,6 +19,15 @@ class Dash extends Component {
 	}
 
 	render() {
+		let build_options = {}
+		if(this.props.settings.builds) {
+			build_options = Object.entries(this.props.settings.builds).map(([i, build]) => {
+				return (
+					<option key={ i }>{ build.name }</option>
+				)
+			});
+		}
+
 		return (
 			<div>
 				<div className="columns dev-dash">
@@ -26,12 +35,9 @@ class Dash extends Component {
 						<div className="field">
 							<div className="control">
 								<div className="select is-fullwidth">
-									<select defaultValue="value" onChange={this.handleBuildChange}>
+									<select defaultValue="default" onChange={this.handleBuildChange}>
 										<option value="default" disabled>Select build...</option>
-										<option>Grapefruit</option>
-										<option>Lime</option>
-										<option>Coconut</option>
-										<option>Mango</option>
+										{build_options ? build_options : ''}
 									</select>
 								</div>
 							</div>

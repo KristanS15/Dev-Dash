@@ -19,13 +19,6 @@ export default function admin(state = {
                 builds: action.payload.builds
             };
         }
-        case "BUILD_DELETED": {
-            return {
-                terminal: action.payload.terminal,
-                editor: action.payload.editor,
-                builds: action.payload.builds
-            };
-        }
         default: {
             return state;
         }
