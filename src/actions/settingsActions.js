@@ -19,6 +19,16 @@ export function saveSettings(state) {
     return function(dispatch) {
         let new_data = JSON.stringify(state);
         fs.writeFileSync(filePath, new_data);
-        dispatch({type: "SETTINGS_SAVED", payload: new_data})
+        dispatch({type: "SETTINGS_SAVED", payload: state})
     }
 }
+
+// export function deleteBuild(key) {
+//     return function(dispatch) {
+//         var data = fs.readFileSync(filePath, 'utf-8');
+//         data = JSON.parse(data);
+//         delete data.builds[key];
+//         fs.writeFileSync(filePath, JSON.stringify(data), 'utf-8');
+//         dispatch({type: "BUILD_DELETED", payload: data})
+//     }
+// }

@@ -29,4 +29,10 @@ html {
   flex-direction: column;
   justify-content: center; }
 
+.table th.center-content, .table td.center-content {
+  vertical-align: middle; }
+  .table th.center-content .delete, .table td.center-content .delete {
+    margin-top: 2px;
+    margin-left: 3px; }
+
 /*# sourceMappingURL=index.css.map */

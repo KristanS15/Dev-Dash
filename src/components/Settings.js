@@ -6,20 +6,16 @@ class Settings extends Component {
 	constructor(props) {
 		super(props);
 		this.state = props.settings;
-		this.resetForm = this.resetForm.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.resetForm = this.resetForm.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleBuildChange = this.handleBuildChange.bind(this);
 		this.handleNewBuild = this.handleNewBuild.bind(this);
+		this.deleteBuild = this.deleteBuild.bind(this);
 	}
 
 	componentWillReceiveProps(newProps) {
 		this.setState(newProps.settings)
-	}
-
-	resetForm(e) {
-		e.preventDefault();
-		this.setState(this.props.settings);
 	}
 
 	handleInputChange(e) {
@@ -42,7 +38,8 @@ class Settings extends Component {
         });
 	}
 
-	handleNewBuild() {
+	handleNewBuild(e) {
+		e.preventDefault();
 		let count = Object.keys(this.state.builds).length + 1;
 		this.setState({
 			...this.state,
@@ -58,9 +55,27 @@ class Settings extends Component {
 		});
 	}
 
+	deleteBuild(e, key) {
+		e.preventDefault();
+		let state = {
+			...this.state,
+			builds: {
+				...this.state.builds
+			}
+		}
+		delete state.builds[key];
+        this.setState(state);
+	}
+
 	handleSubmit(e) {
 		e.preventDefault();
         this.props.dispatch(saveSettings(this.state));
+	}
+
+	resetForm(e) {
+		e.preventDefault();
+		console.log(this.props.settings);
+		this.setState(this.props.settings);
 	}
 	
 	render() {
@@ -77,6 +92,7 @@ class Settings extends Component {
 						<td><input className="input" type="text" placeholder="Build location" name="location" defaultValue={ build.location } /></td>
 						<td><input className="input" type="text" placeholder="Build start" name="start" defaultValue={ build.start } /></td>
 						<td><input className="input" type="text" placeholder="Build connect" name="connect" defaultValue={ build.connect } /></td>
+						<td className="center-content"><a className="delete" onClick={ (e) => this.deleteBuild(e, i) }></a></td>
 					</tr>
 				)
 			});
@@ -91,7 +107,7 @@ class Settings extends Component {
 							<div className="field">
 								<label className="label">Terminal</label>
 								<div className="control">
-									<input className="input" type="text" placeholder="iTerm" name="terminal" defaultValue={ this.state.terminal } onChange={ this.handleInputChange } />
+									<input className="input" type="text" placeholder="iTerm" name="terminal" value={ this.state.terminal } onChange={ this.handleInputChange } />
 								</div>
 							</div>
 						</div>
@@ -99,7 +115,7 @@ class Settings extends Component {
 							<div className="field">
 								<label className="label">Editor</label>
 								<div className="control">
-									<input className="input" type="text" placeholder="VSCode" name="editor" defaultValue={ this.state.editor } onChange={ this.handleInputChange } />
+									<input className="input" type="text" placeholder="VSCode" name="editor" value={ this.state.editor } onChange={ this.handleInputChange } />
 								</div>
 							</div>
 						</div>
@@ -128,7 +144,7 @@ class Settings extends Component {
 							{ builds }
 						</tbody>
 					</table>
-					
+
 					<div className="field is-grouped">
 						<div className="control">
 							<input type="submit" className="button is-link" value="Save" />
