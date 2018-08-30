@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import { HashRouter, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchSettings } from './actions/settingsActions';
 import 'bulma/css/bulma.css'
 import Nav from './components/Nav';
 import Dash from './components/Dash';
 import Settings from './components/Settings';
 
 class App extends Component {
+	constructor(props) {
+		super(props);
+	}
+
+	componentWillMount() {
+		this.props.dispatch(fetchSettings());
+	}
+
 	render() {
 		return (
 			<HashRouter>
@@ -25,4 +35,10 @@ class App extends Component {
 	}
 }
 
-export default App;
+function mapStateToProps(state) {
+    return {
+        settings: state.settings,
+    }
+}
+
+export default connect(mapStateToProps)(App);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux';
 
 class Dash extends Component {
 	constructor(props) {
@@ -23,9 +23,9 @@ class Dash extends Component {
 			<div>
 				<div className="columns dev-dash">
 					<div className="column dev-dash-select">
-						<div class="field">
-							<div class="control">
-								<div class="select is-fullwidth">
+						<div className="field">
+							<div className="control">
+								<div className="select is-fullwidth">
 									<select defaultValue="value" onChange={this.handleBuildChange}>
 										<option value="default" disabled>Select build...</option>
 										<option>Grapefruit</option>
@@ -46,4 +46,10 @@ class Dash extends Component {
 	}
 }
 
-export default Dash;
+function mapStateToProps(state) {
+    return {
+        settings: state.settings,
+    }
+}
+
+export default connect(mapStateToProps)(Dash);

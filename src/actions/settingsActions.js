@@ -17,7 +17,8 @@ export function fetchSettings() {
 
 export function saveSettings(state) {
     return function(dispatch) {
-        fs.writeFileSync(filePath, JSON.stringify(state));
-        dispatch({type: "SETTINGS_SAVED"})
+        let new_data = JSON.stringify(state);
+        fs.writeFileSync(filePath, new_data);
+        dispatch({type: "SETTINGS_SAVED", payload: new_data})
     }
 }

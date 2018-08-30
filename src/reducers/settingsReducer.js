@@ -13,7 +13,12 @@ export default function admin(state = {
             };
         }
         case "SETTINGS_SAVED": {
-            return state;
+            let payload = JSON.parse(action.payload);
+            return {
+                terminal: payload.terminal,
+                editor: payload.editor,
+                builds: payload.builds
+            };
         }
         default: {
             return state;

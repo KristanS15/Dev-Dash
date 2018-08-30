@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchSettings, saveSettings } from '../actions/settingsActions';
+import { saveSettings } from '../actions/settingsActions';
 
 class Settings extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = props.settings;
 		this.resetForm = this.resetForm.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -13,10 +13,6 @@ class Settings extends Component {
 		this.handleNewBuild = this.handleNewBuild.bind(this);
 	}
 
-	componentWillMount() {
-		this.props.dispatch(fetchSettings());
-	}
-	
 	componentWillReceiveProps(newProps) {
 		this.setState(newProps.settings)
 	}
