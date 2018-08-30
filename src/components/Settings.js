@@ -1,35 +1,29 @@
 import React, { Component } from 'react';
-
-const electron = window.require('electron');
-const path = require('path');
-const fs = electron.remote.require('fs');
-
-const userDataPath = (electron.app || electron.remote.app).getPath('userData');
-const filePath = path.join(userDataPath, "user-settings" + '.json');
+import { connect } from 'react-redux';
+import { fetchSettings, saveSettings } from '../actions/settingsActions';
 
 class Settings extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {};
 		this.resetForm = this.resetForm.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
-
-		this.state = {
-			terminal: "iTerm",
-			editor: "VSCode"
-		}
+		this.handleBuildChange = this.handleBuildChange.bind(this);
+		this.handleNewBuild = this.handleNewBuild.bind(this);
 	}
 
-	componentDidMount() {
-		this.resetForm();
+	componentWillMount() {
+		this.props.dispatch(fetchSettings());
+	}
+	
+	componentWillReceiveProps(newProps) {
+		this.setState(newProps.settings)
 	}
 
-	resetForm() {
-		fs.readFile(filePath, "utf8",  (err, data)  => {
-			if (err) throw err;
-			const obj = JSON.parse(data);
-			this.setState(obj);
-		});
+	resetForm(e) {
+		e.preventDefault();
+		this.setState(this.props.settings);
 	}
 
 	handleInputChange(e) {
@@ -37,42 +31,114 @@ class Settings extends Component {
 			...this.state,
 			[e.target.name]: e.target.value
         });
-    }
+	}
+	
+	handleBuildChange(e, key) {
+		this.setState({
+			...this.state,
+			builds: {
+				...this.state.builds,
+				[key]: {
+					...this.state.builds[key],
+					[e.target.name]: e.target.value
+				}
+			}
+        });
+	}
+
+	handleNewBuild() {
+		let count = Object.keys(this.state.builds).length + 1;
+		this.setState({
+			...this.state,
+			builds: {
+				...this.state.builds,
+				[count]: {
+					"name": "",
+					"location": "",
+					"start": "",
+					"connect": "",
+				}
+			}
+		});
+	}
 
 	handleSubmit(e) {
 		e.preventDefault();
-		fs.writeFileSync(filePath, JSON.stringify(this.state));
+        this.props.dispatch(saveSettings(this.state));
 	}
-
+	
 	render() {
+		let builds = (
+			<tr>
+				<td colSpan="4">You currently have no builds setup.</td>
+			</tr>
+		);
+		if(this.state.builds) {
+			builds = Object.entries(this.state.builds).map(([i, build]) => {
+				return (
+					<tr key={ i } onChange={ (e) => this.handleBuildChange(e, i) }>
+						<td><input className="input" type="text" placeholder="Build name" name="name" defaultValue={ build.name } /></td>
+						<td><input className="input" type="text" placeholder="Build location" name="location" defaultValue={ build.location } /></td>
+						<td><input className="input" type="text" placeholder="Build start" name="start" defaultValue={ build.start } /></td>
+						<td><input className="input" type="text" placeholder="Build connect" name="connect" defaultValue={ build.connect } /></td>
+					</tr>
+				)
+			});
+		}
+
 		return (
 			<div>
 				<h1 className="title is-1">Settings</h1>
 				<form onSubmit={ this.handleSubmit }>
 					<div className="columns">
 						<div className="column">
-							<div class="field">
-								<label class="label">Terminal</label>
-								<div class="control">
-									<input class="input" type="text" placeholder="iTerm" name="terminal" value={ this.state.terminal } onChange={ this.handleInputChange } />
+							<div className="field">
+								<label className="label">Terminal</label>
+								<div className="control">
+									<input className="input" type="text" placeholder="iTerm" name="terminal" defaultValue={ this.state.terminal } onChange={ this.handleInputChange } />
 								</div>
 							</div>
 						</div>
 						<div className="column">
-							<div class="field">
-								<label class="label">Editor</label>
-								<div class="control">
-									<input class="input" type="text" placeholder="VSCode" name="editor" value={ this.state.editor } onChange={ this.handleInputChange } />
+							<div className="field">
+								<label className="label">Editor</label>
+								<div className="control">
+									<input className="input" type="text" placeholder="VSCode" name="editor" defaultValue={ this.state.editor } onChange={ this.handleInputChange } />
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="field is-grouped">
-						<div class="control">
-							<input type="submit" className="button is-link" value="Submit" />
+
+					<hr />
+
+					<div className="columns">
+						<div className="column">
+							<h2 className="title is-2">Builds</h2>
 						</div>
-						<div class="control">
-							<button class="button is-text" onClick={ this.resetForm }>Reset to last save</button>
+						<div className="column">
+							<button className="button is-link is-pulled-right" onClick={ this.handleNewBuild }>New Build</button>
+						</div>
+					</div>
+					<table className="table is-bordered is-striped is-hoverable is-fullwidth">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Location</th>
+								<th>Start Command</th>
+								<th>Connect Command</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ builds }
+						</tbody>
+					</table>
+					
+					<div className="field is-grouped">
+						<div className="control">
+							<input type="submit" className="button is-link" value="Save" />
+						</div>
+						<div className="control">
+							<button className="button is-text" onClick={ this.resetForm }>Reset to last save</button>
 						</div>
 					</div>
 				</form>
@@ -81,4 +147,10 @@ class Settings extends Component {
 	}
 }
 
-export default Settings;
+function mapStateToProps(state) {
+    return {
+        settings: state.settings,
+    }
+}
+
+export default connect(mapStateToProps)(Settings);

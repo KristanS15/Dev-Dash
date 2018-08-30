@@ -10,8 +10,10 @@ class App extends Component {
 		return (
 			<HashRouter>
 				<div>
-					<div className="columns">
-						<Nav />
+					<div className="columns content-container">
+						<div className="column is-one-fifth sidebar">
+							<Nav />
+						</div>
 						<div className="column top-column">
 							<Route exact path="/" component={ Dash }/>
 							<Route exact path="/settings" component={ Settings }/>

@@ -1,11 +1,22 @@
 html {
   margin-top: 12px; }
 
-.sidebar {
-  padding-top: 40px;
-  padding-right: 0;
-  border-right: 1px solid black;
+.content-container {
+  overflow: hidden;
   height: 100vh; }
+
+.sidebar {
+  height: 100vh;
+  margin-top: 40px;
+  padding-top: 0;
+  padding-right: 0;
+  overflow-y: scroll;
+  position: relative; }
+
+.top-column {
+  padding-right: 1.5em;
+  border-left: 1px solid black;
+  overflow-y: scroll; }
 
 .dev-dash {
   flex-direction: column; }
@@ -17,8 +28,5 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: center; }
-
-.top-column {
-  padding-right: 1.5em; }
 
 /*# sourceMappingURL=index.css.map */

@@ -5,11 +5,17 @@
   "main": "electron-starter.js",
   "homepage": "./",
   "dependencies": {
+    "axios": "^0.18.0",
     "bulma": "^0.6.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5"
+    "react-scripts": "1.1.5",
+    "redux": "^4.0.0",
+    "redux-logger": "^3.0.6",
+    "redux-promise-middleware": "^5.1.1",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "npm run sass | BROWSER=none react-scripts start",
@@ -17,7 +23,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "dev": "nf start",
-    "sass" : "sass --watch src/styles/scss/index.scss:src/styles/css/index.css",
+    "sass": "sass --watch src/styles/scss/index.scss:src/styles/css/index.css",
     "sass:build": "sass — update src/styles/scss/index.scss:src/styles/css/index.css"
   },
   "devDependencies": {
