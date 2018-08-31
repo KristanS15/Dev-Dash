@@ -2,6 +2,7 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path');
 const Store = require('./electron-store.js');
+const untildify = require('untildify');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -33,6 +34,11 @@ function createWindow () {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
+
+  mainWindow.webContents.on('dom-ready', () => {
+    homedir = untildify("~");
+    mainWindow.webContents.send('homedir', homedir);
+  });
 
   // The BrowserWindow class extends the node.js core EventEmitter class, so we use that API
   // to listen to events on the BrowserWindow. The resize event is emitted when the window size changes.

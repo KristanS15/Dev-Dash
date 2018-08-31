@@ -2,15 +2,40 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getBuild } from '../actions/buildActions';
 
+const { shell } = window.require('electron');
+
 class Dash extends Component {
 	constructor(props) {
 		super(props);
 		this.handleBuildChange = this.handleBuildChange.bind(this);
+		this.openRoute = this.openRoute.bind(this);
+
+		this.state = {
+			chosen_build: ""
+		};
 	}
 
 	handleBuildChange(e) {
 		e.preventDefault();
+		this.setState({
+			...this.state,
+			chosen_build: e.target.value
+		});
 		this.props.dispatch(getBuild(e.target.value))
+	}
+
+	openRoute(e, location) {
+		e.preventDefault();
+		location = location.replace('~', this.props.homedir);
+
+		// Get vagrant folder
+		let vagrant_location = this.props.settings.builds[this.state.chosen_build].location;
+		vagrant_location = vagrant_location.split('/');
+		vagrant_location.pop();
+		vagrant_location = vagrant_location.join('/');
+
+		location = location.replace('./', vagrant_location + '/');
+		shell.openItem(location);
 	}
 
 	render() {
@@ -31,9 +56,9 @@ class Dash extends Component {
 		if(this.props.build.folders) {
 			folders = Object.entries(this.props.build.folders).map(([i, folder]) => {
 				return (
-					<tr>
-						<td>{ folder[0] }</td>
-						<td>{ folder[1] }</td>
+					<tr key={ i }>
+						<td><a onClick={ (e) => this.openRoute(e, folder[0]) }>{ folder[0] }</a></td>
+						<td><a onClick={ (e) => this.openRoute(e, folder[1]) }>{ folder[1] }</a></td>
 					</tr>
 				)
 			});
@@ -59,8 +84,7 @@ class Dash extends Component {
 						}
 					</div>
 					<div className="column">
-						<h1 className="title is-1">Dev-Dash</h1>
-						{ this.props.build.folders.length ? 
+						{ this.props.build.folders.length &&
 							<table className="table is-bordered is-striped is-hoverable is-fullwidth">
 								<thead>
 									<tr>
@@ -72,8 +96,6 @@ class Dash extends Component {
 									{ folders }
 								</tbody>
 							</table>
-						:
-							<p>folders not found!</p>
 						}
 					</div>
 				</div>
@@ -85,7 +107,8 @@ class Dash extends Component {
 function mapStateToProps(state) {
     return {
         settings: state.settings,
-        build: state.build,
+		build: state.build,
+		homedir: state.homedir.homedir
     }
 }
 

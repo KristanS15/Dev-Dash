@@ -15,7 +15,9 @@
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^5.1.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "shelljs": "^0.8.2",
+    "untildify": "^3.0.3"
   },
   "scripts": {
     "start": "npm run sass | BROWSER=none react-scripts start",
