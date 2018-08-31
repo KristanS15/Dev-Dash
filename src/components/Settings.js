@@ -74,7 +74,6 @@ class Settings extends Component {
 
 	resetForm(e) {
 		e.preventDefault();
-		console.log(this.props.settings);
 		this.setState(this.props.settings);
 	}
 	
