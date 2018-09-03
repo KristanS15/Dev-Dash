@@ -15,14 +15,14 @@ html {
 
 .top-column {
   padding-right: 1.5em;
-  border-left: 1px solid black;
+  border-left: 1px solid lightgray;
   overflow-y: scroll; }
 
 .dev-dash {
   flex-direction: column; }
 
 .dev-dash-select {
-  border-bottom: 1px solid black; }
+  border-bottom: 1px solid lightgray; }
 
 .vertically_align {
   display: flex;

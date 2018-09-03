@@ -1,8 +1,9 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path');
 const Store = require('./electron-store.js');
 const untildify = require('untildify');
+const child_process = require('child_process');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -35,9 +36,20 @@ function createWindow () {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
+  ipcMain.on('localTerminal', (event, location) => {
+    child_process.exec("/Applications/Hyper.app/Contents/MacOS/Hyper " + location, { shell: true });
+  });
+
   mainWindow.webContents.on('dom-ready', () => {
     homedir = untildify("~");
     mainWindow.webContents.send('homedir', homedir);
+
+    // Listen for terminal open click
+      // Path to Hyper
+      // SSH?
+      // Path to open
+    // let testing = "hyper opened!";
+    // mainWindow.webContents.send('testing', testing);
   });
 
   // The BrowserWindow class extends the node.js core EventEmitter class, so we use that API

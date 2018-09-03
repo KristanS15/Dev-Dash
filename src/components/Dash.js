@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import { getBuild } from '../actions/buildActions';
 
 const { shell } = window.require('electron');
+const ipcRenderer = window.require('electron').ipcRenderer;
 
 class Dash extends Component {
 	constructor(props) {
 		super(props);
 		this.handleBuildChange = this.handleBuildChange.bind(this);
-		this.openRoute = this.openRoute.bind(this);
+		this.openLocalFinderPath = this.openLocalFinderPath.bind(this);
+		this.openLocalTerminalPath = this.openLocalTerminalPath.bind(this);
+		this.openSSHTerminalPath = this.openSSHTerminalPath.bind(this);
 
 		this.state = {
 			chosen_build: ""
@@ -24,8 +27,7 @@ class Dash extends Component {
 		this.props.dispatch(getBuild(e.target.value))
 	}
 
-	openRoute(e, location) {
-		e.preventDefault();
+	makeAbsolutePath(location) {
 		location = location.replace('~', this.props.homedir);
 
 		// Get vagrant folder
@@ -35,7 +37,25 @@ class Dash extends Component {
 		vagrant_location = vagrant_location.join('/');
 
 		location = location.replace('./', vagrant_location + '/');
+
+		return location;
+	}
+
+	openLocalFinderPath(e, location) {
+		e.preventDefault();
+		location = this.makeAbsolutePath(location);
 		shell.openItem(location);
+	}
+
+	openLocalTerminalPath(e, location) {
+		e.preventDefault();
+		location = this.makeAbsolutePath(location);
+		ipcRenderer.send('localTerminal', location);
+	}
+
+	openSSHTerminalPath(e, location) {
+		e.preventDefault();
+		console.log("ssh terminal: " + location);
 	}
 
 	render() {
@@ -57,8 +77,16 @@ class Dash extends Component {
 			folders = Object.entries(this.props.build.folders).map(([i, folder]) => {
 				return (
 					<tr key={ i }>
-						<td><a onClick={ (e) => this.openRoute(e, folder[0]) }>{ folder[0] }</a></td>
-						<td><a onClick={ (e) => this.openRoute(e, folder[1]) }>{ folder[1] }</a></td>
+						<td>
+							<div className="columns">
+								<div className="column is-half">{ folder[0] }:</div>
+								<div className="column is-one-quarter"><a onClick={ (e) => this.openLocalFinderPath(e, folder[0]) }>Finder</a></div>
+								<div className="column is-one-quarter"><a onClick={ (e) => this.openLocalTerminalPath(e, folder[0]) }>Terminal</a></div>
+							</div>
+						</td>
+						<td>
+							<a onClick={ (e) => this.openSSHTerminalPath(e, folder[1]) }>{ folder[1] }</a>
+						</td>
 					</tr>
 				)
 			});
